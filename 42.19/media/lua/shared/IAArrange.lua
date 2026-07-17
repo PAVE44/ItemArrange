@@ -156,7 +156,57 @@ IA.surfaceProfile = {
         [5] = {zmin = 0.69, zmax = 1.00, xmin = 0.47, xmax = 0.95, ymin = 0.10, ymax = 0.90},
     },
 
-    
+    vhsShelfBigS = {
+        [1] = {zmin = 0.49, zmax = 0.64, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+        [4] = {zmin = 0.69, zmax = 1.00, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+    },
+
+    vhsShelfBigE = {
+        [1] = {zmin = 0.49, zmax = 0.64, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+        [4] = {zmin = 0.69, zmax = 1.00, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+    },
+
+    vhsShelfBigN = {
+        [1] = {zmin = 0.49, zmax = 0.64, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+        [4] = {zmin = 0.69, zmax = 1.00, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+    },
+
+    vhsShelfBigW  = {
+        [1] = {zmin = 0.49, zmax = 0.64, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+        [4] = {zmin = 0.69, zmax = 1.00, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+    },
+
+    vhsShelfSmallS = {
+        [1] = {zmin = 0.49, zmax = 1.00, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.20, xmax = 0.95, ymin = 0.25, ymax = 0.45},
+    },
+
+    vhsShelfSmallE = {
+        [1] = {zmin = 0.49, zmax = 1.00, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.20, xmax = 0.45, ymin = 0.20, ymax = 0.95},
+    },
+
+    vhsShelfSmallN = {
+        [1] = {zmin = 0.49, zmax = 1.00, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.20, xmax = 0.95, ymin = 0.70, ymax = 0.90},
+    },
+
+    vhsShelfSmallW  = {
+        [1] = {zmin = 0.49, zmax = 1.00, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+        [2] = {zmin = 0.29, zmax = 0.44, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+        [3] = {zmin = 0.10, zmax = 0.25, xmin = 0.60, xmax = 0.90, ymin = 0.20, ymax = 0.95},
+    },
 }
 
 
@@ -656,9 +706,36 @@ IA.surfaces = {
     ["furniture_shelving_01_26"] = IA.surfaceProfile.metalShelfNS,
     ["furniture_shelving_01_27"] = IA.surfaceProfile.metalShelfNS,
 
+    -- vhs shelves
+    ["location_entertainment_theatre_01_120"] = IA.surfaceProfile.vhsShelfBigS,
+    ["location_entertainment_theatre_01_121"] = IA.surfaceProfile.vhsShelfBigS,
+    ["location_entertainment_theatre_01_122"] = IA.surfaceProfile.vhsShelfBigE,
+    ["location_entertainment_theatre_01_123"] = IA.surfaceProfile.vhsShelfBigE,
+    ["location_entertainment_theatre_01_124"] = IA.surfaceProfile.vhsShelfBigN,
+    ["location_entertainment_theatre_01_125"] = IA.surfaceProfile.vhsShelfBigN,
+    ["location_entertainment_theatre_01_126"] = IA.surfaceProfile.vhsShelfBigW,
+    ["location_entertainment_theatre_01_127"] = IA.surfaceProfile.vhsShelfBigW,
+    ["location_entertainment_theatre_01_128"] = IA.surfaceProfile.vhsShelfSmallS,
+    ["location_entertainment_theatre_01_129"] = IA.surfaceProfile.vhsShelfSmallS,
+    ["location_entertainment_theatre_01_130"] = IA.surfaceProfile.vhsShelfSmallE,
+    ["location_entertainment_theatre_01_131"] = IA.surfaceProfile.vhsShelfSmallE,
+    ["location_entertainment_theatre_01_132"] = IA.surfaceProfile.vhsShelfSmallN,
+    ["location_entertainment_theatre_01_133"] = IA.surfaceProfile.vhsShelfSmallN,
+    ["location_entertainment_theatre_01_134"] = IA.surfaceProfile.vhsShelfSmallW,
+    ["location_entertainment_theatre_01_135"] = IA.surfaceProfile.vhsShelfSmallW,
+
 }
 
 IA.arrangables = {
+    ["Base.VHS_Retail"] = {
+        dx = 0.06,
+        dy = 0.18,
+        dz = 0.10,
+        mz = 0.05,
+        fy = 90,
+        fz = 180,
+        qz = 1,
+    },
     ["Base.ShotgunShellsBox"] = {
         dx = 0.14,
         dy = 0.08,
@@ -1571,7 +1648,6 @@ local CURSOR_ORDER_S = 3
 local CURSOR_ORDER_E = 4
 
 function IA.getSurfaceInfo(square)
-    local surfaces = {}
     local cursorOrder = CURSOR_ORDER_N
 
     local ground = {
@@ -1642,42 +1718,45 @@ function IA.getSurfaceInfo(square)
         end
     end
 
-    
-
     local tileObjects = square:getLuaTileObjectList()
     local squareSurfaceOffset = 0
-
-    local bestObj
+    local surfaces = {}
     for k, object in pairs(tileObjects) do
-        local surfaceOffsetNoTable = object:getSurfaceOffsetNoTable()
-        if surfaceOffsetNoTable > squareSurfaceOffset then
-            squareSurfaceOffset = surfaceOffsetNoTable
-            bestObj = object
-        end
-
-        local surfaceOffset = object:getSurfaceOffset()
-        if surfaceOffset > squareSurfaceOffset then
-            squareSurfaceOffset = surfaceOffset
-            bestObj = object
-        end
-
-    end
-
-    ground.zmin = squareSurfaceOffset / 96
-
-    table.insert(surfaces, ground)
-
-    -- recognized objects with known surfaces
-    local sourceSurfaces = surfaces
-    if bestObj then
-        local sprite = bestObj:getSprite()
+        local sprite = object:getSprite()
         if sprite then
+            local surfaceOffsetNoTable = object:getSurfaceOffsetNoTable()
+            if surfaceOffsetNoTable > squareSurfaceOffset then
+                squareSurfaceOffset = surfaceOffsetNoTable
+            end
+
+            local surfaceOffset = object:getSurfaceOffset()
+            if surfaceOffset > squareSurfaceOffset then
+                squareSurfaceOffset = surfaceOffset
+            end
+
+            squareSurfaceOffset = squareSurfaceOffset / 96
+
             local spriteName = sprite:getName()
             if IA.surfaces[spriteName] then
-                sourceSurfaces = IA.surfaces[spriteName]
+                surfaces = IA.surfaces[spriteName]
+                for _, surface in ipairs(surfaces) do
+                    if not surface.zmin then
+                        surface.zmin = squareSurfaceOffset
+                    end
+                end
+                break
+            else
+                ground.zmin = squareSurfaceOffset
             end
         end
     end
+    
+    if #surfaces == 0 then
+        table.insert(surfaces, ground)
+    end
+
+    -- recognized objects with known surfaces
+    local sourceSurfaces = surfaces
 
     -- Build per-square surfaces and compute vertical clearance against the next
     -- overlapping higher surface so items only fit if their dz fits the gap.
