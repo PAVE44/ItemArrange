@@ -77,6 +77,11 @@ function ISInventoryTransferAction:transferItem(item)
 
 --	print("transfering ", item)
 	self.item = item;
+
+	if self.srcContainer:getType() == "floor" then
+		self.itemSquare = item:getWorldItem():getSquare()
+	end
+
 	--self.character:ClearVariable("LootPosition");
 	self.item:setJobDelta(0.0);
 	if self.item:isFavorite() and not self.destContainer:isInCharacterInventory(self.character) then
@@ -134,11 +139,7 @@ function ISInventoryTransferAction:transferItem(item)
     end
 
     if source:getType() == "floor" then
-        local wob = item:getWorldItem()
-        if wob then
-            local square = wob:getSquare()
-            IA.ArrangeItems(square)
-        end
+        IA.ArrangeItems(self.itemSquare)
     end
 
     
