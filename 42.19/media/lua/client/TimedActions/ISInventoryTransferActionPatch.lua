@@ -3,33 +3,33 @@ require "TimedActions/ISInventoryTransferAction"
 local transferItem = ISInventoryTransferAction.transferItem
 
 function ISInventoryTransferAction:canDropOnFloor(square)
-	if not square then
-		return false
-	end
-	if not square:TreatAsSolidFloor() then
-		return false
-	end
+    if not square then
+        return false
+    end
+    if not square:TreatAsSolidFloor() then
+        return false
+    end
     --[[
-	if square:isSolid() or square:isSolidTrans() then
-		return false
-	end]]
-	local current = self.character:getCurrentSquare()
-	if current ~= nil and square ~= current then
-		if current:isBlockedTo(square) or current:isWindowTo(square) then
-			return false
-		end
-		if current:HasStairs() ~= square:HasStairs() then
-			return false
-		end
-		if current:HasStairs() and not current:isSameStaircase(square:getX(), square:getY(), square:getZ()) then
-			return false
-		end
-	end
-	return true
+    if square:isSolid() or square:isSolidTrans() then
+        return false
+    end]]
+    local current = self.character:getCurrentSquare()
+    if current ~= nil and square ~= current then
+        if current:isBlockedTo(square) or current:isWindowTo(square) then
+            return false
+        end
+        if current:HasStairs() ~= square:HasStairs() then
+            return false
+        end
+        if current:HasStairs() and not current:isSameStaircase(square:getX(), square:getY(), square:getZ()) then
+            return false
+        end
+    end
+    return true
 end
 
 function ISInventoryTransferAction:floorHasRoomFor(square, character, item, destContainer)
-	local res = IA.CheckSpace(square, self.item)
+    local res = IA.CheckSpace(square, self.item)
     if res then
         return true
     end
@@ -53,6 +53,7 @@ function ISInventoryTransferAction:getNotFullFloorSquare(item)
         if ty < cy - 1 then ty = cy - 1 end
 
         self.square = getCell():getGridSquare(tx, ty, cz)
+		print ("getNotFullFloorSquare x: ", self.square:getX(), " y: ", self.square:getY(), " z: ", self.square:getZ())
     end
 
     --local square = self.character:getCurrentSquare()
@@ -67,58 +68,58 @@ function ISInventoryTransferAction:transferItem(item)
     -- transferItem(self, item)
 
     if self:isAlreadyTransferred(item) then
-		return
-	end
-	
-	if self.dontAdd then
-		-- Crafting ingredient was destroyed and can't be put back into the container it came from.
-		return
-	end
+        return
+    end
+    
+    if self.dontAdd then
+        -- Crafting ingredient was destroyed and can't be put back into the container it came from.
+        return
+    end
 
---	print("transfering ", item)
-	self.item = item;
+--    print("transfering ", item)
+    self.item = item;
 
-	if self.srcContainer:getType() == "floor" then
-		self.itemSquare = item:getWorldItem():getSquare()
-	end
+    if self.srcContainer:getType() == "floor" then
+        self.itemSquare = item:getWorldItem():getSquare()
+    end
 
-	--self.character:ClearVariable("LootPosition");
-	self.item:setJobDelta(0.0);
-	if self.item:isFavorite() and not self.destContainer:isInCharacterInventory(self.character) then
---		ISBaseTimedAction.perform(self);
-		return;
-	end
+    --self.character:ClearVariable("LootPosition");
+    self.item:setJobDelta(0.0);
+    if self.item:isFavorite() and not self.destContainer:isInCharacterInventory(self.character) then
+--        ISBaseTimedAction.perform(self);
+        return;
+    end
 
-	local square = self:getNotFullFloorSquare(item)
-	self.item = ISTransferAction:transferItem(self.character, self.item, self.srcContainer, self.destContainer, square)
+    local square = self:getNotFullFloorSquare(item)
+    self.item = ISTransferAction:transferItem(self.character, self.item, self.srcContainer, self.destContainer, square)
 
-	-- clear it from the queue.
-	self.srcContainer:setDrawDirty(true);
-	self.srcContainer:setHasBeenLooted(true);
-	self.destContainer:setDrawDirty(true);
+    -- clear it from the queue.
+    self.srcContainer:setDrawDirty(true);
+    self.srcContainer:setHasBeenLooted(true);
+    self.destContainer:setDrawDirty(true);
 
-	if instanceof(self.srcContainer:getParent(), "IsoDeadBody") then
-		self.item:setAttachedSlot(-1);
-		self.item:setAttachedSlotType(nil);
-		self.item:setAttachedToModel(nil);
-	end
+    if instanceof(self.srcContainer:getParent(), "IsoDeadBody") then
+        self.item:setAttachedSlot(-1);
+        self.item:setAttachedSlotType(nil);
+        self.item:setAttachedToModel(nil);
+    end
 
-	if instanceof(self.destContainer:getParent(), 'IsoMannequin') then
-		local mannequin = self.destContainer:getParent()
-		mannequin:wearItem(self.item, self.character)
-	end
-	
-	-- Hack for giving cooking XP.
-	if instanceof(self.item, "Food") then
-		self.item:setChef(self.character:getFullName())
-	end
-	if self.destContainer:getType() == "stonefurnace" then
-		self.item:setWorker(self.character:getFullName());
-	end
+    if instanceof(self.destContainer:getParent(), 'IsoMannequin') then
+        local mannequin = self.destContainer:getParent()
+        mannequin:wearItem(self.item, self.character)
+    end
+    
+    -- Hack for giving cooking XP.
+    if instanceof(self.item, "Food") then
+        self.item:setChef(self.character:getFullName())
+    end
+    if self.destContainer:getType() == "stonefurnace" then
+        self.item:setWorker(self.character:getFullName());
+    end
 
-	ISInventoryPage.renderDirty = true
+    ISInventoryPage.renderDirty = true
 
-	-- do the overlay sprite
+    -- do the overlay sprite
     if self.srcContainer:getParent() and self.srcContainer:getParent():getOverlaySprite() then
         ItemPicker.updateOverlaySprite(self.srcContainer:getParent())
     end
@@ -129,7 +130,6 @@ function ISInventoryTransferAction:transferItem(item)
     if not isServer() then
         self:playTransferCompleteSound(item)
     end
-
 
     local player = self.character
     local destination = self.destContainer
@@ -144,4 +144,50 @@ function ISInventoryTransferAction:transferItem(item)
 
     
     -- triggerEvent("OnTransferItem", self, item)
+end
+
+
+-- multiplayer
+
+local CLIENT_DELAY_FOR_MULTI_TRANSACTION = 10
+function ISInventoryTransferAction:waitToStart()
+	if self.srcContainer:getType() == "floor" then
+        self.itemSquare = self.item:getWorldItem():getSquare()
+    end
+
+    if not isClient() then
+        return false
+	else
+	    local timePassed = getTimestampMs() - self.startTime
+	    return timePassed < CLIENT_DELAY_FOR_MULTI_TRANSACTION
+    end
+end
+
+
+function ISInventoryTransferAction:forceComplete()
+    if not isClient() then
+        return;
+    end
+    self.maxTime = 0.0
+    self.action:setTime(self.maxTime)
+    self.item:setJobDelta(0.0);
+    if self.action then
+        self.action:stopTimedActionAnim();
+    end
+
+    self.action:forceComplete()
+
+	local player = self.character
+    local destination = self.destContainer
+    local source = self.srcContainer
+    if destination:getType() == "floor" then
+		local square = self:getNotFullFloorSquare(self.item)
+        IA.ArrangeItems(square)
+    end
+
+    if source:getType() == "floor" then
+        IA.ArrangeItems(self.itemSquare)
+    end
+
+    --ISBaseTimedAction.perform(self);
 end

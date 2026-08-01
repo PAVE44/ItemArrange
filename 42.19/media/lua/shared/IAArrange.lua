@@ -332,6 +332,74 @@ local function arrangeGroundList(square, groundList, applyOffsets)
         return setSurface(nextSurface)
     end
 
+    local function isOutOfBounds(xpos, ypos, dx, dy)
+        return (cursorOrder == CURSOR_ORDER_N and ypos + dy > ymax)
+            or (cursorOrder == CURSOR_ORDER_W and xpos + dx > xmax)
+            or (cursorOrder == CURSOR_ORDER_S and ypos < ymin)
+            or (cursorOrder == CURSOR_ORDER_E and xpos < xmin)
+    end
+
+    local placedBoundsBySurface = {}
+
+    local function getAnchorBounds(xpos, ypos, zpos, dx, dy, dz)
+        local x1, x2, y1, y2
+        if cursorOrder == CURSOR_ORDER_S then
+            x1 = xpos
+            x2 = xpos + dx
+            y1 = ypos - dy
+            y2 = ypos
+        elseif cursorOrder == CURSOR_ORDER_E then
+            x1 = xpos - dx
+            x2 = xpos
+            y1 = ypos
+            y2 = ypos + dy
+        else
+            x1 = xpos
+            x2 = xpos + dx
+            y1 = ypos
+            y2 = ypos + dy
+        end
+
+        return {
+            x1 = x1,
+            x2 = x2,
+            y1 = y1,
+            y2 = y2,
+            z1 = zpos,
+            z2 = zpos + dz,
+        }
+    end
+
+    local function boundsOverlap(a, b)
+        local overlapX = (a.x1 < b.x2) and (b.x1 < a.x2)
+        local overlapY = (a.y1 < b.y2) and (b.y1 < a.y2)
+        local overlapZ = (a.z1 < b.z2) and (b.z1 < a.z2)
+        return overlapX and overlapY and overlapZ
+    end
+
+    local function isPositionOccupied(surfaceIndex, xpos, ypos, zpos, dx, dy, dz)
+        local bounds = getAnchorBounds(xpos, ypos, zpos, dx, dy, dz)
+        local placed = placedBoundsBySurface[surfaceIndex]
+        if not placed then
+            return false
+        end
+
+        for _, existing in ipairs(placed) do
+            if boundsOverlap(bounds, existing) then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    local function registerPlacedBounds(surfaceIndex, xpos, ypos, zpos, dx, dy, dz)
+        if not placedBoundsBySurface[surfaceIndex] then
+            placedBoundsBySurface[surfaceIndex] = {}
+        end
+        table.insert(placedBoundsBySurface[surfaceIndex], getAnchorBounds(xpos, ypos, zpos, dx, dy, dz))
+    end
+
     local totalTypes = 0
     for _ in pairs(groundList) do
         totalTypes = totalTypes + 1
@@ -423,11 +491,7 @@ local function arrangeGroundList(square, groundList, applyOffsets)
 
                     xpos = cx
                     ypos = cy
-                    if (cursorOrder == CURSOR_ORDER_N and ypos + dy > ymax)
-                        or (cursorOrder == CURSOR_ORDER_W and xpos + dx > xmax)
-                        or (cursorOrder == CURSOR_ORDER_S and ypos < ymin)
-                        or (cursorOrder == CURSOR_ORDER_E and xpos < xmin)
-                    then
+                    if isOutOfBounds(xpos, ypos, dx, dy) then
                         if not switchSurfaceByFit(dx, dy, dz, mz) then
                             print ("ItemArranger: ran out of space to arrange items on this surface (1), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
                             return false
@@ -439,6 +503,47 @@ local function arrangeGroundList(square, groundList, applyOffsets)
                     end
                 end
             end
+
+            -- Restored cursor state can be stale for the current item dimensions.
+            -- Re-validate XY bounds before placing this item.
+            while isOutOfBounds(xpos, ypos, dx, dy) do
+                z = 0
+                if not switchSurfaceByFit(dx, dy, dz, mz) then
+                    print ("ItemArranger: ran out of space to arrange items on this surface (xy-guard), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
+                    return false
+                end
+
+                zpos = zmin + mz + (z * dz)
+                xpos = cx
+                ypos = cy
+            end
+
+            while isPositionOccupied(cs, xpos, ypos, zpos, dx, dy, dz) do
+                z = 0
+                if not switchSurfaceByFit(dx, dy, dz, mz) then
+                    print ("ItemArranger: ran out of space to arrange items on this surface (collision-guard), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
+                    return false
+                end
+
+                zpos = zmin + mz + (z * dz)
+                xpos = cx
+                ypos = cy
+
+                while isOutOfBounds(xpos, ypos, dx, dy) do
+                    z = 0
+                    if not switchSurfaceByFit(dx, dy, dz, mz) then
+                        print ("ItemArranger: ran out of space to arrange items on this surface (xy-after-collision), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
+                        return false
+                    end
+
+                    zpos = zmin + mz + (z * dz)
+                    xpos = cx
+                    ypos = cy
+                end
+            end
+
+            local anchorX = xpos
+            local anchorY = ypos
 
             if cursorOrder == CURSOR_ORDER_N then
                 xpos = xpos + (dx / 2)
@@ -467,6 +572,8 @@ local function arrangeGroundList(square, groundList, applyOffsets)
                 local fz = arr.fz or 0
                 item:setWorldZRotation(fz)
             end
+
+            registerPlacedBounds(cs, anchorX, anchorY, zpos, dx, dy, dz)
             z = z + 1
         end
 
