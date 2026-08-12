@@ -310,26 +310,51 @@ local function arrangeGroundList(square, groundList, applyOffsets)
         return (szmin + (mz or 0) + dz) <= szmax
     end
 
-    local function selectLowestFittingSurface(dx, dy, dz, mz)
+    local function selectLowestFittingSurface(dx, dy, dz, mz, skipIndex)
         for index = 1, #orderedSurfaceIndexes do
-            if not exhaustedSurfaces[index] and canSurfaceFitItem(index, dx, dy, dz, mz) then
+            if index ~= skipIndex and not exhaustedSurfaces[index] and canSurfaceFitItem(index, dx, dy, dz, mz) then
                 return index
             end
         end
         return nil
     end
 
-    local function switchSurfaceByFit(dx, dy, dz, mz)
-        if cs then
+    local function switchSurfaceByFit(dx, dy, dz, mz, exhaustCurrent)
+        local shouldExhaust = (exhaustCurrent ~= false)
+        local previous = cs
+
+        if shouldExhaust and previous then
             exhaustedSurfaces[cs] = true
         end
 
-        local nextSurface = selectLowestFittingSurface(dx, dy, dz, mz)
+        local nextSurface = selectLowestFittingSurface(dx, dy, dz, mz, previous)
+        if not nextSurface and not shouldExhaust then
+            -- Fallback: if this was a temporary guard switch, allow staying put.
+            nextSurface = selectLowestFittingSurface(dx, dy, dz, mz)
+        end
+
         if not nextSurface then
             return false
         end
 
         return setSurface(nextSurface)
+    end
+
+    local function switchSurfaceByGuard(dx, dy, dz, mz, guardState)
+        -- Guard switches should not permanently exhaust a surface on first miss,
+        -- but must still terminate if we keep bouncing across candidates.
+        if not guardState then
+            return switchSurfaceByFit(dx, dy, dz, mz, false)
+        end
+
+        guardState.attempts = (guardState.attempts or 0) + 1
+
+        if guardState.attempts <= #orderedSurfaceIndexes then
+            return switchSurfaceByFit(dx, dy, dz, mz, false)
+        end
+
+        guardState.attempts = 0
+        return switchSurfaceByFit(dx, dy, dz, mz, true)
     end
 
     local function isOutOfBounds(xpos, ypos, dx, dy)
@@ -371,9 +396,12 @@ local function arrangeGroundList(square, groundList, applyOffsets)
     end
 
     local function boundsOverlap(a, b)
-        local overlapX = (a.x1 < b.x2) and (b.x1 < a.x2)
-        local overlapY = (a.y1 < b.y2) and (b.y1 < a.y2)
-        local overlapZ = (a.z1 < b.z2) and (b.z1 < a.z2)
+        -- Use a tiny epsilon so numerically-adjacent bounds (touching faces)
+        -- are not treated as collisions due to floating-point noise.
+        local eps = 0.0005
+        local overlapX = ((a.x1 + eps) < b.x2) and ((b.x1 + eps) < a.x2)
+        local overlapY = ((a.y1 + eps) < b.y2) and ((b.y1 + eps) < a.y2)
+        local overlapZ = ((a.z1 + eps) < b.z2) and ((b.z1 + eps) < a.z2)
         return overlapX and overlapY and overlapZ
     end
 
@@ -506,9 +534,10 @@ local function arrangeGroundList(square, groundList, applyOffsets)
 
             -- Restored cursor state can be stale for the current item dimensions.
             -- Re-validate XY bounds before placing this item.
+            local xyGuardState = { attempts = 0 }
             while isOutOfBounds(xpos, ypos, dx, dy) do
                 z = 0
-                if not switchSurfaceByFit(dx, dy, dz, mz) then
+                if not switchSurfaceByGuard(dx, dy, dz, mz, xyGuardState) then
                     print ("ItemArranger: ran out of space to arrange items on this surface (xy-guard), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
                     return false
                 end
@@ -520,18 +549,56 @@ local function arrangeGroundList(square, groundList, applyOffsets)
 
             while isPositionOccupied(cs, xpos, ypos, zpos, dx, dy, dz) do
                 z = 0
-                if not switchSurfaceByFit(dx, dy, dz, mz) then
-                    print ("ItemArranger: ran out of space to arrange items on this surface (collision-guard), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
-                    return false
+                if cursorOrder == CURSOR_ORDER_W or cursorOrder == CURSOR_ORDER_E then
+                    cy = cy + dy
+                else
+                    cx = cx + dx
+                end
+
+                zpos = zmin + mz + (z * dz)
+                if cursorOrder == CURSOR_ORDER_W then
+                    if cy + dy > ymax then
+                        cy = ymin
+                        cx = cx + dymax
+                        dymax = dx
+                    end
+                elseif cursorOrder == CURSOR_ORDER_E then
+                    if cy + dy > ymax then
+                        cy = ymin
+                        cx = cx - dymax
+                        dymax = dx
+                    end
+                else
+                    if cx + dx > xmax then
+                        cx = xmin
+                        if cursorOrder == CURSOR_ORDER_S then
+                            cy = cy - dxmax
+                        else
+                            cy = cy + dxmax
+                        end
+                        dxmax = dy
+                    end
                 end
 
                 zpos = zmin + mz + (z * dz)
                 xpos = cx
                 ypos = cy
 
+                if isOutOfBounds(xpos, ypos, dx, dy) then
+                    if not switchSurfaceByFit(dx, dy, dz, mz) then
+                        print ("ItemArranger: ran out of space to arrange items on this surface (collision-guard), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
+                        return false
+                    end
+
+                    zpos = zmin + mz + (z * dz)
+                    xpos = cx
+                    ypos = cy
+                end
+
+                local xyAfterCollisionGuardState = { attempts = 0 }
                 while isOutOfBounds(xpos, ypos, dx, dy) do
                     z = 0
-                    if not switchSurfaceByFit(dx, dy, dz, mz) then
+                    if not switchSurfaceByGuard(dx, dy, dz, mz, xyAfterCollisionGuardState) then
                         print ("ItemArranger: ran out of space to arrange items on this surface (xy-after-collision), cursorOrder:" .. cursorOrder .. ", xpos: " .. xpos .. ", ypos: " .. ypos .. ", zpos: " .. zpos .. ", dx: " .. dx .. ", dy: " .. dy .. " xmax: " .. xmax .. ", ymax: " .. ymax)
                         return false
                     end
@@ -571,6 +638,9 @@ local function arrangeGroundList(square, groundList, applyOffsets)
 
                 local fz = arr.fz or 0
                 item:setWorldZRotation(fz)
+
+                item:setDoingExtendedPlacement(false)
+                entry.witem:syncExtendedPlacement()
             end
 
             registerPlacedBounds(cs, anchorX, anchorY, zpos, dx, dy, dz)
@@ -628,6 +698,7 @@ local function arrangeGroundList(square, groundList, applyOffsets)
             end
         end
     end
+
     return true
 end
 

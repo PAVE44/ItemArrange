@@ -362,6 +362,7 @@ IA.surfaces = {
     ["carpentry_02_37"] = IA.surfaceProfile.counterS,
     ["carpentry_02_38"] = IA.surfaceProfile.counterW,
     ["carpentry_02_39"] = IA.surfaceProfile.counterW,
+    
 
     ["carpentry_02_64"] = IA.surfaceProfile.fridgeS,
     ["carpentry_02_65"] = IA.surfaceProfile.fridgeE,
@@ -444,6 +445,15 @@ IA.surfaces = {
     ["fixtures_counters_01_77"] = IA.surfaceProfile.counterS,
     ["fixtures_counters_01_78"] = IA.surfaceProfile.counterW,
     ["fixtures_counters_01_79"] = IA.surfaceProfile.counterW,
+
+    ["fixtures_counters_01_192"] = IA.surfaceProfile.counterN,
+    ["fixtures_counters_01_193"] = IA.surfaceProfile.counterN,
+    ["fixtures_counters_01_194"] = IA.surfaceProfile.counterN,
+    ["fixtures_counters_01_195"] = IA.surfaceProfile.counterE,
+    ["fixtures_counters_01_196"] = IA.surfaceProfile.counterW,
+    ["fixtures_counters_01_197"] = IA.surfaceProfile.counterS,
+    ["fixtures_counters_01_198"] = IA.surfaceProfile.counterW,
+    ["fixtures_counters_01_199"] = IA.surfaceProfile.counterW,
 
     ["furniture_bedding_01_0"] = IA.surfaceProfile.bedS,
     ["furniture_bedding_01_1"] = IA.surfaceProfile.bedN,
