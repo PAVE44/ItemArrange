@@ -56,6 +56,9 @@ function IAArrangeAction:perform()
 
     self.item:setJobDelta(0.0)
 
+    self.srcContainer:DoRemoveItem(self.item)
+    sendRemoveItemFromContainer(self.srcContainer, self.item)
+
     if isClient() then
         sendClientCommand(self.character, 'Commands', 'DropItem', {item = self.item, x = self.dropSquare:getX(), y = self.dropSquare:getY(), z = self.dropSquare:getZ()})
     else
@@ -64,9 +67,6 @@ function IAArrangeAction:perform()
         IA.ArrangeItems(self.dropSquare)
     end
     
-    self.srcContainer:DoRemoveItem(self.item)
-    sendRemoveItemFromContainer(self.srcContainer, self.item)
-
     -- needed to remove from queue / start next.
     ISBaseTimedAction.perform(self)
 
