@@ -4,13 +4,25 @@ IAServer.DropItem = function(player, args)
     local item = args.item
 
     if item and args.x and args.y and args.z then
+        local newitem = item:createCloneItem()
         local dropSquare = getCell():getGridSquare(args.x, args.y, args.z)
         if dropSquare then
-            dropSquare:AddWorldInventoryItem(item, args.x, args.y, args.z)
+            dropSquare:AddWorldInventoryItem(newitem, args.x, args.y, args.z)
             sendServerCommand('Commands', 'Arrange', {x = args.x, y = args.y, z = args.z})
         end
     else
         print ("IAServer.DropItem: missing item or coordinates")
+    end
+end
+
+IAServer.RemoveItemFromContainer = function(player, args)
+    local item = args.item
+    local container = args.container
+
+    if item and container then
+        container:Remove(item)
+    else
+        print ("IAServer.RemoveItemFromContainer: missing item or container")
     end
 end
 

@@ -63,9 +63,10 @@ function IAArrangeAction:perform()
 
         IA.ArrangeItems(self.dropSquare)
     end
+    
     self.srcContainer:Remove(self.item)
     sendRemoveItemFromContainer(self.srcContainer, self.item)
-    
+
     -- needed to remove from queue / start next.
     ISBaseTimedAction.perform(self)
 
