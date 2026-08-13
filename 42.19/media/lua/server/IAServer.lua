@@ -4,10 +4,10 @@ IAServer.DropItem = function(player, args)
     local item = args.item
 
     if item and args.x and args.y and args.z then
-        local newitem = instanceItem(item:getFullType())
         local dropSquare = getCell():getGridSquare(args.x, args.y, args.z)
         if dropSquare then
-            dropSquare:AddWorldInventoryItem(newitem, args.x, args.y, args.z)
+            dropSquare:AddWorldInventoryItem(item, args.x, args.y, args.z)
+            player:getInventory():DoRemoveItem(item)
             sendServerCommand('Commands', 'Arrange', {x = args.x, y = args.y, z = args.z})
         end
     else
