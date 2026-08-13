@@ -928,6 +928,8 @@ IA.arrangableProfile = {
     produceBoxM          = {dx = 0.31, dy = 0.28, dz = 0.07, qz = 3},
     produceBoxS          = {dx = 0.25, dy = 0.23, dz = 0.05, fz = 90, qz = 4},
     produceBoxXS         = {dx = 0.22, dy = 0.20, dz = 0.03, qz = 6},
+    metalsheet           = {dx = 0.28, dy = 0.69, dz = 0.01, qz = 12},
+    smallmetalsheet      = {dx = 0.19, dy = 0.22, dz = 0.01, qz = 12},
     oxygenTank           = {dx = 0.18, dy = 0.18, dz = 0.20, fx = 0, fy = 270, fz = 90, mz = 0.08, qz = 1},
     propaneTank          = {dx = 0.23, dy = 0.23, dz = 0.20, qz = 1},
     extinguisher         = {dx = 0.25, dy = 0.25, dz = 0.20, qz = 1, fz = 270},
@@ -941,6 +943,7 @@ IA.arrangableProfile = {
     slugRepellent        = {dx = 0.15, dy = 0.09, dz = 0.09, qz = 2},
     insectRepellent      = {dx = 0.09, dy = 0.09, dz = 0.06, qz = 1},
     plasterPowder        = {dx = 0.37, dy = 0.54, dz = 0.05, fz = 270, qz = 5},
+    plank                = {dx = 0.86, dy = 0.12, dz = 0.02, qz = 8},
     seasoningJar         = {dx = 0.10, dy = 0.10, dz = 0.07, qz = 1, fz = 153},
     driedBeans           = {dx = 0.40, dy = 0.24, dz = 0.01, qz = 12},
     sugar                = {dx = 0.18, dy = 0.12, dz = 0.10, fz = 8, qz = 2},
@@ -1504,6 +1507,11 @@ IA.arrangables = {
     ["Base.JuiceBoxFruitpunch"] = IA.arrangableProfile.juiceBox,
     ["Base.JuiceBoxOrange"]     = IA.arrangableProfile.juiceBox,
 
+    -- metal
+    ["Base.SheetMetal"]     = IA.arrangableProfile.metalsheet,
+    ["Base.SmallSheetMetal"]     = IA.arrangableProfile.smallmetalsheet,
+    
+
     -- oxygenTank
     ["Base.Oxygen_Tank"] = IA.arrangableProfile.oxygenTank,
 
@@ -1535,6 +1543,9 @@ IA.arrangables = {
 
     -- plasterPowder
     ["Base.PlasterPowder"] = IA.arrangableProfile.plasterPowder,
+
+    -- plasterPowder
+    ["Base.Plank"] = IA.arrangableProfile.plank,
 
     -- produceBoxL
     ["Base.Parcel_Large"]      = IA.arrangableProfile.produceBoxL,

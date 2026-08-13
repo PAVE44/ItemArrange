@@ -59,8 +59,9 @@ function IAArrangeAction:perform()
     if isClient() then
         sendClientCommand(self.character, 'Commands', 'DropItem', {item = self.item, x = self.dropSquare:getX(), y = self.dropSquare:getY(), z = self.dropSquare:getZ()})
     else
-        self.dropSquare:AddWorldInventoryItem(self.item, self.dropSquare:getX(), self.dropSquare:getY(), self.dropSquare:getZ())
-		IA.ArrangeItems(self.dropSquare)
+        self.dropSquare:AddWorldInventoryItem(self.item, 0.5, 0.5, 0.0)
+
+        IA.ArrangeItems(self.dropSquare)
     end
     self.srcContainer:Remove(self.item)
     sendRemoveItemFromContainer(self.srcContainer, self.item)

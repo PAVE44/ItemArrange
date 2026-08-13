@@ -9,7 +9,7 @@ local function onPreFillWorldObjectContextMenu(playerId, context, worldobjects, 
 
     local player = getSpecificPlayer(playerId)
 
-    local optionArrange = context:addOption("Arrange", player, arrangeItems, square)
+    -- local optionArrange = context:addOption("Arrange", player, arrangeItems, square)
 end
 
 Events.OnPreFillWorldObjectContextMenu.Add(onPreFillWorldObjectContextMenu)
