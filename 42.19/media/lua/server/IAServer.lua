@@ -15,17 +15,6 @@ IAServer.DropItem = function(player, args)
     end
 end
 
-IAServer.RemoveItemFromContainer = function(player, args)
-    local item = args.item
-    local container = args.container
-
-    if item and container then
-        container:Remove(item)
-    else
-        print ("IAServer.RemoveItemFromContainer: missing item or container")
-    end
-end
-
 local onClientCommand = function(module, command, player, args)
     if module == "Commands" and IAServer[command] then
         IAServer[command](player, args)

@@ -12,11 +12,21 @@ function IAArrangeAction:isValid()
     if not self.dropSquare or not self.srcContainer then
         return false
     end
+    if self.character:getSquare():isSomethingTo(self.dropSquare) then
+        return false
+    end
     if not IA.CheckSpace(self.dropSquare, self.item) then
         return false
     end
 
     return true
+end
+
+function IAArrangeAction:stopLoopingSound()
+    if self.loopSound then
+        self.character:getEmitter():stopSound(self.loopSound)
+        self.loopSound = nil
+	end
 end
 
 function IAArrangeAction:update()
@@ -38,9 +48,11 @@ end
 
 function IAArrangeAction:start()
     self:setActionAnim("Loot")
+    self.loopSound = self.character:getEmitter():playSound("RummageInInventory")
 end
 
 function IAArrangeAction:stop()
+    self:stopLoopingSound()
     self.item:setJobDelta(0.0)
     if self.action then
         self.action:setLoopedAction(false)
@@ -54,6 +66,7 @@ function IAArrangeAction:perform()
         return
     end
 
+    self:stopLoopingSound()
     self.item:setJobDelta(0.0)
 
     self.srcContainer:DoRemoveItem(self.item)
