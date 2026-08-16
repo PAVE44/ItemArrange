@@ -25,7 +25,7 @@ function ISInventoryTransferUtil.newInventoryTransferAction(character, item, src
     local isDropAndArrange = destContainer and destContainer:getType() == "floor" and isShiftKeyDown()
     if isDropAndArrange then
         local dropSquare = ISInventoryTransferUtil.getDropSquare(character)
-        return IAArrangeAction:new(character, item, srcContainer, dropSquare, time)
+        return IAArrangeAction:new(character, item, srcContainer, dropSquare)
     end
 
     return old(character, item, srcContainer, destContainer, time)

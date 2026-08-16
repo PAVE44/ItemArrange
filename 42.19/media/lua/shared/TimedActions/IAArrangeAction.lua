@@ -69,28 +69,55 @@ function IAArrangeAction:perform()
     self:stopLoopingSound()
     self.item:setJobDelta(0.0)
 
-    self.srcContainer:DoRemoveItem(self.item)
-    sendRemoveItemFromContainer(self.srcContainer, self.item)
-
-    if isClient() then
-        sendClientCommand(self.character, 'Commands', 'DropItem', {item = self.item, x = self.dropSquare:getX(), y = self.dropSquare:getY(), z = self.dropSquare:getZ()})
-    else
-        self.dropSquare:AddWorldInventoryItem(self.item, 0.5, 0.5, 0.0)
-
-        IA.ArrangeItems(self.dropSquare)
-    end
-    
     -- needed to remove from queue / start next.
     ISBaseTimedAction.perform(self)
 
     ISInventoryPage.renderDirty = true
 end
 
+function IAArrangeAction:complete()
+    self.srcContainer:DoRemoveItem(self.item)
+    sendRemoveItemFromContainer(self.srcContainer, self.item)
+    self.dropSquare:AddWorldInventoryItem(self.item, 0.5, 0.5, 0.0)
+    IA.ArrangeItems(self.dropSquare)
+    return true
+end
+
 function IAArrangeAction:getTimeDelta()
     return 0
 end
 
-function IAArrangeAction:new (character, item, srcContainer, dropSquare, time)
+function IAArrangeAction:getDuration()
+    if self.character:isTimedActionInstant() then
+        return 1
+    end
+
+    local time = 120
+    local w = self.item:getActualWeight()
+    if w > 3 then 
+        w = 3
+    end
+    time = time * (w)
+
+    if self.srcContainer == self.character:getInventory() then
+        time = time * 0.1
+    elseif self.srcContainer:isInCharacterInventory(self.character) then
+        -- Unpack -> drop
+    else
+        time = time * 0.2
+    end
+
+    if self.character:hasTrait(CharacterTrait.DEXTROUS) then
+        time = time * 0.5
+    end
+    if self.character:hasTrait(CharacterTrait.ALL_THUMBS) or self.character:isWearingAwkwardGloves() then
+        time = time * 2.0
+    end
+
+    return time
+end
+
+function IAArrangeAction:new (character, item, srcContainer, dropSquare)
     local o = {}
     setmetatable(o, self)
     self.__index = self
@@ -99,36 +126,7 @@ function IAArrangeAction:new (character, item, srcContainer, dropSquare, time)
     o.srcContainer = srcContainer
     o.dropSquare = dropSquare
     o.startTime = getTimestampMs()
-    o.maxTime = 0
-    if time then
-        o.maxTime = time
-    else
-        o.maxTime = 120
-        local w = item:getActualWeight()
-        if w > 3 then 
-            w = 3
-        end
-        o.maxTime = o.maxTime * (w)
-
-        if o.srcContainer == o.character:getInventory() then
-            o.maxTime = o.maxTime * 0.1
-        elseif o.srcContainer:isInCharacterInventory(o.character) then
-            -- Unpack -> drop
-        else
-            o.maxTime = o.maxTime * 0.2
-        end
-
-        if character:hasTrait(CharacterTrait.DEXTROUS) then
-            o.maxTime = o.maxTime * 0.5
-        end
-        if character:hasTrait(CharacterTrait.ALL_THUMBS) or character:isWearingAwkwardGloves() then
-            o.maxTime = o.maxTime * 2.0
-        end
-    end
-    if character:isTimedActionInstant() then
-        o.maxTime = 1
-    end
-
+    o.maxTime = o:getDuration()
     return o
 end
 
