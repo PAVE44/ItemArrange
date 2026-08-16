@@ -968,6 +968,11 @@ IA.arrangableProfile = {
     pipe                 = {dx = 0.60, dy = 0.05, dz = 0.01, qz = 8},
     bucket               = {dx = 0.25, dy = 0.25, dz = 0.05, qz = 2},
     pot                  = {dx = 0.40, dy = 0.40, dz = 0.10, qz = 2},
+    logStack4            = {dx = 0.49, dy = 0.43, dz = 0.18, qz = 2},
+    logStack2            = {dx = 0.50, dy = 0.43, dz = 0.09, qz = 4},
+    log                  = {dx = 0.25, dy = 0.43, dz = 0.09, qz = 4},
+    ingot                = {dx = 0.12, dy = 0.24, dz = 0.03, qz = 8},
+    ingotSmall           = {dx = 0.06, dy = 0.12, dz = 0.015, qz = 8},
 }
 
 IA.arrangables = {
@@ -1038,6 +1043,18 @@ IA.arrangables = {
 
     -- beerPack
     ["Base.BeerPack"] = IA.arrangableProfile.beerPack,
+
+    -- metal ingots
+    ["Base.GoldBar"] = IA.arrangableProfile.ingot,
+    ["Base.SilverBar"] = IA.arrangableProfile.ingot,
+    ["Base.IronIngot"] = IA.arrangableProfile.ingot,
+    ["Base.SteelIngot"] = IA.arrangableProfile.ingot,
+    ["Base.PiercedSteelIngot"] = IA.arrangableProfile.ingot,
+    ["Base.CopperIngot"] = IA.arrangableProfile.ingot,
+    ["Base.BrassIngot"] = IA.arrangableProfile.ingot,
+
+    ["Base.SmallGoldBar"] = IA.arrangableProfile.ingotSmall,
+    ["Base.SmallSilverBar"] = IA.arrangableProfile.ingotSmall,
 
     -- books
     ["Base.BookFarming1"] = IA.arrangableProfile.book,
@@ -1524,6 +1541,12 @@ IA.arrangables = {
     ["Base.JuiceBoxApple"]      = IA.arrangableProfile.juiceBox,
     ["Base.JuiceBoxFruitpunch"] = IA.arrangableProfile.juiceBox,
     ["Base.JuiceBoxOrange"]     = IA.arrangableProfile.juiceBox,
+
+    -- logs
+    ["Base.LogStacks4"] = IA.arrangableProfile.logStack4,
+    ["Base.LogStacks3"] = IA.arrangableProfile.logStack4,
+    ["Base.LogStacks2"] = IA.arrangableProfile.logStack2,
+    ["Base.Log"]        = IA.arrangableProfile.log,
 
     -- metal
     ["Base.SheetMetal"]     = IA.arrangableProfile.metalsheet,
