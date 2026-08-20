@@ -897,6 +897,7 @@ IA.arrangableProfile = {
     bookFancy            = {dx = 0.07, dy = 0.23, dz = 0.12, mz = 0.05, fy = 270, qz = 1},
     paperback            = {dx = 0.05, dy = 0.18, dz = 0.09, mz = 0.05, fy = 270, qz = 1},
     magazine             = {dx = 0.02, dy = 0.25, dz = 0.10, mz = 0.07, fx = 270, fy = 270, qz = 1},
+    hottieZ              = {dx = 0.02, dy = 0.25, dz = 0.14, mz = 0.07, fy = 90, qz = 1},
     shotgunShellsBox     = {dx = 0.14, dy = 0.08, dz = 0.03},
     ammoBox              = {dx = 0.20, dy = 0.10, dz = 0.02, qz = 6},
     ammoCarton           = {dx = 0.30, dy = 0.27, dz = 0.06, qz = 8},
@@ -973,6 +974,13 @@ IA.arrangableProfile = {
     log                  = {dx = 0.25, dy = 0.43, dz = 0.09, qz = 4},
     ingot                = {dx = 0.12, dy = 0.24, dz = 0.03, qz = 8},
     ingotSmall           = {dx = 0.06, dy = 0.12, dz = 0.015, qz = 8},
+    block                = {dx = 0.11, dy = 0.12, dz = 0.03, qz = 6},
+    blockSmall           = {dx = 0.11, dy = 0.11, dz = 0.02, qz = 8},
+    moneyBundle          = {dx = 0.22, dy = 0.10, dz = 0.02, qz = 8},
+    fishingHooks         = {dx = 0.16, dy = 0.10, dz = 0.015, qz = 8},
+    hairGel              = {dx = 0.14, dy = 0.14, dz = 0.04, qz = 3},
+    hairSpray            = {dx = 0.09, dy = 0.09, dz = 0.09, qz = 1},
+    honey                = {dx = 0.12, dy = 0.08, dz = 0.09, qz = 1},
 }
 
 IA.arrangables = {
@@ -1044,7 +1052,15 @@ IA.arrangables = {
     -- beerPack
     ["Base.BeerPack"] = IA.arrangableProfile.beerPack,
 
-    -- metal ingots
+    -- hair
+    ["Base.Hairgel"] = IA.arrangableProfile.hairGel,
+    ["Base.Hairspray2"] = IA.arrangableProfile.hairSpray,
+
+
+    -- money
+    ["Base.MoneyBundle"] = IA.arrangableProfile.moneyBundle,
+
+    -- metal 
     ["Base.GoldBar"] = IA.arrangableProfile.ingot,
     ["Base.SilverBar"] = IA.arrangableProfile.ingot,
     ["Base.IronIngot"] = IA.arrangableProfile.ingot,
@@ -1052,9 +1068,12 @@ IA.arrangables = {
     ["Base.PiercedSteelIngot"] = IA.arrangableProfile.ingot,
     ["Base.CopperIngot"] = IA.arrangableProfile.ingot,
     ["Base.BrassIngot"] = IA.arrangableProfile.ingot,
-
     ["Base.SmallGoldBar"] = IA.arrangableProfile.ingotSmall,
     ["Base.SmallSilverBar"] = IA.arrangableProfile.ingotSmall,
+
+    ["Base.SteelBlock"] = IA.arrangableProfile.blockSmall,
+    ["Base.IronBlock"] = IA.arrangableProfile.blockSmall,
+    ["Base.StoneBlock"] = IA.arrangableProfile.block,
 
     -- books
     ["Base.BookFarming1"] = IA.arrangableProfile.book,
@@ -1298,6 +1317,7 @@ IA.arrangables = {
     ["Base.BookFancy_Prop"] = IA.arrangableProfile.bookFancy,
 
 
+    ["Base.Catalog"] = IA.arrangableProfile.magazine, -- upside down
     ["Base.TVMagazine"] = IA.arrangableProfile.magazine,
     ["Base.TVMagazine_New"] = IA.arrangableProfile.magazine,
     ["Base.MagazineWordsearch"] = IA.arrangableProfile.magazine,
@@ -1383,8 +1403,11 @@ IA.arrangables = {
     ["Base.ElectronicsMag3"] = IA.arrangableProfile.magazine,
     ["Base.ElectronicsMag4"] = IA.arrangableProfile.magazine,
     ["Base.ElectronicsMag5"] = IA.arrangableProfile.magazine,
-
-
+    ["Base.ArmorSchematic"] = IA.arrangableProfile.magazine,
+    ["Base.LetterHandwritten"] = IA.arrangableProfile.magazine,
+    ["Base.HottieZ"] = IA.arrangableProfile.hottieZ,
+    ["Base.HottieZ_New"] = IA.arrangableProfile.hottieZ,
+    ["Base.HunkZ"] = IA.arrangableProfile.hottieZ,
 
     -- bottle
     ["Base.BeerBottle"]  = IA.arrangableProfile.bottle,
@@ -1436,6 +1459,7 @@ IA.arrangables = {
 
     -- candleBox
     ["Base.CandleBox"] = IA.arrangableProfile.candleBox,
+    ["Base.LightBulbBox"] = IA.arrangableProfile.candleBox,
 
     -- cannedFoodBox
     ["Base.CannedSardines_Box"] = IA.arrangableProfile.cannedFoodBox,
@@ -1523,8 +1547,18 @@ IA.arrangables = {
     -- fertilizer
     ["Base.Fertilizer"] = IA.arrangableProfile.fertilizer,
 
+    -- fishing
+    ["Base.FishingHookBox"] = IA.arrangableProfile.fishingHooks,
+
     -- garbagebagBox
     ["Base.Garbagebag_box"] = IA.arrangableProfile.garbagebagBox,
+
+    -- honey
+    ["Base.Honey"] = IA.arrangableProfile.honey,
+    ["Base.Mustard"] = IA.arrangableProfile.honey,
+    ["Base.Ketchup"] = IA.arrangableProfile.honey,
+    -- ["Base.BBQSauce"] = IA.arrangableProfile.honey,
+
 
     -- insectRepellent
     ["Base.InsectRepellent"] = IA.arrangableProfile.insectRepellent,
@@ -1550,7 +1584,9 @@ IA.arrangables = {
 
     -- metal
     ["Base.SheetMetal"]     = IA.arrangableProfile.metalsheet,
+    ["Base.CopperSheet"]     = IA.arrangableProfile.metalsheet,
     ["Base.SmallSheetMetal"]     = IA.arrangableProfile.smallmetalsheet,
+    ["Base.SmallCopperSheet"]     = IA.arrangableProfile.smallmetalsheet,
     
 
     -- oxygenTank
@@ -1588,25 +1624,30 @@ IA.arrangables = {
     -- plasterPowder
     ["Base.Plank"] = IA.arrangableProfile.plank,
 
+    -- produceBoxXL
+    ["Base.Parcel_ExtraLarge"]     = IA.arrangableProfile.produceBoxXL,
+    ["Base.ProduceBox_ExtraLarge"] = IA.arrangableProfile.produceBoxXL,
+    ["Base.Present_ExtraLarge"]  = IA.arrangableProfile.produceBoxL,
+
     -- produceBoxL
     ["Base.Parcel_Large"]      = IA.arrangableProfile.produceBoxL,
     ["Base.ProduceBox_Large"]  = IA.arrangableProfile.produceBoxL,
+    ["Base.Present_Large"]  = IA.arrangableProfile.produceBoxL,
 
     -- produceBoxM
     ["Base.Parcel_Medium"]     = IA.arrangableProfile.produceBoxM,
     ["Base.ProduceBox_Medium"] = IA.arrangableProfile.produceBoxM,
+    ["Base.Present_Medium"]  = IA.arrangableProfile.produceBoxM,
 
     -- produceBoxS
     ["Base.Parcel_Small"]      = IA.arrangableProfile.produceBoxS,
     ["Base.ProduceBox_Small"]  = IA.arrangableProfile.produceBoxS,
-
-    -- produceBoxXL
-    ["Base.Parcel_ExtraLarge"]     = IA.arrangableProfile.produceBoxXL,
-    ["Base.ProduceBox_ExtraLarge"] = IA.arrangableProfile.produceBoxXL,
+    ["Base.Present_Small"]  = IA.arrangableProfile.produceBoxS,
 
     -- produceBoxXS
     ["Base.Parcel_ExtraSmall"]     = IA.arrangableProfile.produceBoxXS,
     ["Base.ProduceBox_ExtraSmall"] = IA.arrangableProfile.produceBoxXS,
+    ["Base.Present_ExtraSmall"]  = IA.arrangableProfile.produceBoxXS,
 
     -- propaneTank
     ["Base.PropaneTank"] = IA.arrangableProfile.propaneTank,
